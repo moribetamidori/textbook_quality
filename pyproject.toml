@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "textbook_quality"
+name = "app"
 version = "0.1.0"
 description = ""
 authors = ["Vik Paruchuri <vik.paruchuri@gmail.com>"]
