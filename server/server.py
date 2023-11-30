@@ -52,3 +52,25 @@ async def augment_topics(request: TopicAugmentorRequest):
         raise HTTPException(status_code=500, detail="Augmentation failed.") from e
 
     return {"status": "success", "data": data}
+
+class BookGeneratorRequest(BaseModel):
+    topics_file: str
+    books_file: str
+    workers: int
+
+@app.post("/generate_books")
+async def generate_books(request: BookGeneratorRequest):
+    try:
+        subprocess.check_call([
+            "python", "book_generator.py", 
+            request.topics_file, request.books_file, 
+            "--workers", str(request.workers)
+        ])
+        file_path = os.path.join("app", "data", f"{request.books_file}")
+
+        with open(file_path, "r") as file:
+            data = json.load(file)
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail="Book generation failed.") from e
+
+    return {"status": "success", "data": data}
